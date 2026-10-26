@@ -4,5 +4,9 @@ public class TestRunner {
     public static void main(String[] args) {
         BuilderTest builderTest = new BuilderTest();
         builderTest.testBuilder();
+
+        SortingTest sortingTest = new SortingTest();
+        sortingTest.testSort();
+
     }
 }
