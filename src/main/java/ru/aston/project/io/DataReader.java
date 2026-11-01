@@ -1,10 +1,12 @@
 package ru.aston.project.io;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
+import java.util.Random;
+import java.util.Scanner;
 
 public class DataReader {
 
@@ -26,14 +28,14 @@ public class DataReader {
                     continue;
                 }
                 String group = parts[0].trim();
-                if (group.isEmpty()){
+                if (group.isEmpty()) {
                     System.out.println("Строка " + lineNumber
                             + ": пустая группа - " + line);
                     continue;
                 }
                 String gradeText = parts[1].trim();
                 String recordBook = parts[2].trim();
-                if (recordBook.isEmpty()){
+                if (recordBook.isEmpty()) {
                     System.out.println("Строка " + lineNumber
                             + ": пустой номер зачётной книжки - " + line);
                     continue;
@@ -41,7 +43,7 @@ public class DataReader {
                 double grade;
                 try {
                     grade = Double.parseDouble(gradeText);
-                }catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
                     System.out.println("Строка " + lineNumber
                             + ": неверный формат среднего балла - " + gradeText);
                     continue;
@@ -63,6 +65,84 @@ public class DataReader {
             System.out.println("Ошибка чтения файла: " + e.getMessage());
         }
 
+        return students;
+    }
+
+    public List<Student> generateRandom(int count) {
+        if (count < 0) {
+            throw new IllegalArgumentException("Количество студентов не может быть отрицательным");
+        }
+        List<Student> students = new ArrayList<>();
+        String[] groups = {"A-1", "A-2", "B-1", "B-2"};
+        Random random = new Random();
+        for (int i = 0; i < count; i++) {
+            Student student = new Student();
+
+            int groupIndex = random.nextInt(4);
+            String group = groups[groupIndex];
+            student.setGroup(group);
+            double averageGrade = (random.nextInt(31) + 20) / 10.0;
+            student.setAverageGrade(averageGrade);
+
+            int recordBookNumber = random.nextInt(90000) + 10000;
+            String recordBook = String.valueOf(recordBookNumber);
+            student.setRecordBook(recordBook);
+            students.add(student);
+        }
+        return students;
+    }
+
+    public List<Student> readFromConsole(int count) {
+        if (count < 0) {
+            throw new IllegalArgumentException(
+                    "Количество студентов не может быть отрицательным");
+        }
+        List<Student> students = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        for (int i = 0; i < count; i++) {
+            System.out.println("Ввод данных студента №" + (i + 1));
+            String group = "";
+
+            while (group.isEmpty()) {
+                System.out.print("Введите группу: ");
+                group = scanner.nextLine().trim();
+
+                if (group.isEmpty()) {
+                    System.out.println("Ошибка: группа не может быть пустой.");
+                }
+            }
+            double grade = 0;
+            boolean valid = false;
+
+            while (!valid) {
+                System.out.print("Введите средний балл: ");
+                String gradeText = scanner.nextLine().trim();
+                try {
+                    grade = Double.parseDouble(gradeText);
+                    if (!Double.isFinite(grade) || grade < 0 || grade > 5) {
+                        System.out.println("Ошибка: средний балл должен быть числом от 0 до 5.");
+                    } else {
+                        valid = true;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Ошибка: введите число.");
+                }
+            }
+            System.out.print("Введите номер зачётной книжки: ");
+            String recordBook = scanner.nextLine().trim();
+            while (recordBook.isEmpty()) {
+                System.out.println("Ошибка: номер зачётной книжки не может быть пустым.");
+                System.out.print("Введите номер зачётной книжки: ");
+                recordBook = scanner.nextLine().trim();
+            }
+
+            Student student = new Student();
+            student.setGroup(group);
+            student.setAverageGrade(grade);
+            student.setRecordBook(recordBook);
+            students.add(student);
+
+        }
         return students;
     }
 }
