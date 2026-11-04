@@ -2,7 +2,7 @@ package ru.aston.project.validator;
 
 import ru.aston.project.model.Student;
 
-public class AbstractStudentValidator implements StudentValidator {
+public abstract class AbstractStudentValidator implements StudentValidator {
 
     private StudentValidator next;
 
