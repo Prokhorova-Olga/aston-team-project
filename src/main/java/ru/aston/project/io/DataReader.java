@@ -1,5 +1,6 @@
 package ru.aston.project.io;
 
+import ru.aston.project.model.Student;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,10 +54,12 @@ public class DataReader {
                             + ": недопустимый диапазон среднего балла - " + gradeText);
                     continue;
                 }
-                Student student = new Student();
-                student.setGroup(group);
-                student.setAverageGrade(grade);
-                student.setRecordBook(recordBook);
+                Student student = Student.builder()
+                        .group(group)
+                        .averageGrade(grade)
+                        .recordBook(recordBook)
+                        .build();
+
                 students.add(student);
             }
             System.out.println("Количество студентов: " + students.size());
@@ -76,17 +79,20 @@ public class DataReader {
         String[] groups = {"A-1", "A-2", "B-1", "B-2"};
         Random random = new Random();
         for (int i = 0; i < count; i++) {
-            Student student = new Student();
-
             int groupIndex = random.nextInt(4);
             String group = groups[groupIndex];
-            student.setGroup(group);
+
             double averageGrade = (random.nextInt(31) + 20) / 10.0;
-            student.setAverageGrade(averageGrade);
 
             int recordBookNumber = random.nextInt(90000) + 10000;
             String recordBook = String.valueOf(recordBookNumber);
-            student.setRecordBook(recordBook);
+
+            Student student = Student.builder()
+                    .group(group)
+                    .averageGrade(averageGrade)
+                    .recordBook(recordBook)
+                    .build();
+
             students.add(student);
         }
         return students;
@@ -136,10 +142,12 @@ public class DataReader {
                 recordBook = scanner.nextLine().trim();
             }
 
-            Student student = new Student();
-            student.setGroup(group);
-            student.setAverageGrade(grade);
-            student.setRecordBook(recordBook);
+            Student student = Student.builder()
+                    .group(group)
+                    .averageGrade(grade)
+                    .recordBook(recordBook)
+                    .build();
+
             students.add(student);
 
         }
