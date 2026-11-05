@@ -1,5 +1,7 @@
 package ru.aston.project.tests;
 
+import ru.aston.project.model.Student;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -8,7 +10,7 @@ public class Alg1 implements SortStrategy, Comparator<Student> {
 
     @Override
     public int compare(Student student1, Student student2) {
-        return Float.compare(student1.averageGrade, student2.averageGrade);
+        return Double.compare(student1.getAverageGrade(), student2.getAverageGrade());
     }
 
     /**
