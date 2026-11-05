@@ -1,6 +1,7 @@
 package ru.aston.project.io;
 
 import ru.aston.project.model.Student;
+import ru.aston.project.validator.StudentValidatorService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,9 +12,15 @@ import java.util.Scanner;
 
 public class DataReader {
 
+    private final StudentValidatorService validatorService;
+    private final Scanner scanner = new Scanner(System.in);
+
+    public DataReader(StudentValidatorService validatorService) {
+        this.validatorService = validatorService;
+    }
+
     public List<Student> readFromFile(String path) {
         List<Student> students = new ArrayList<>();
-
 
         try {
             List<String> lines = Files.readAllLines(Path.of(path));
@@ -25,22 +32,14 @@ public class DataReader {
                 String[] parts = line.split(",");
                 if (parts.length != 3) {
                     System.out.println("Строка " + lineNumber
-                            + ": неверная строка - " + line);
+                            + ": неверный формат - " + line);
                     continue;
                 }
+
                 String group = parts[0].trim();
-                if (group.isEmpty()) {
-                    System.out.println("Строка " + lineNumber
-                            + ": пустая группа - " + line);
-                    continue;
-                }
                 String gradeText = parts[1].trim();
                 String recordBook = parts[2].trim();
-                if (recordBook.isEmpty()) {
-                    System.out.println("Строка " + lineNumber
-                            + ": пустой номер зачётной книжки - " + line);
-                    continue;
-                }
+
                 double grade;
                 try {
                     grade = Double.parseDouble(gradeText);
@@ -49,19 +48,18 @@ public class DataReader {
                             + ": неверный формат среднего балла - " + gradeText);
                     continue;
                 }
-                if (!Double.isFinite(grade) || grade < 0 || grade > 5) {
-                    System.out.println("Строка " + lineNumber
-                            + ": недопустимый диапазон среднего балла - " + gradeText);
-                    continue;
-                }
+
                 Student student = Student.builder()
                         .group(group)
                         .averageGrade(grade)
                         .recordBook(recordBook)
                         .build();
 
-                students.add(student);
+                if (validatorService.validate(student)) {
+                    students.add(student);
+                }
             }
+
             System.out.println("Количество студентов: " + students.size());
 
         } catch (IOException e) {
@@ -70,7 +68,6 @@ public class DataReader {
 
         return students;
     }
-
     public List<Student> generateRandom(int count) {
         if (count < 0) {
             throw new IllegalArgumentException("Количество студентов не может быть отрицательным");
@@ -103,54 +100,47 @@ public class DataReader {
             throw new IllegalArgumentException(
                     "Количество студентов не может быть отрицательным");
         }
+
         List<Student> students = new ArrayList<>();
-        Scanner scanner = new Scanner(System.in);
+
         for (int i = 0; i < count; i++) {
-            System.out.println("Ввод данных студента №" + (i + 1));
-            String group = "";
-
-            while (group.isEmpty()) {
-                System.out.print("Введите группу: ");
-                group = scanner.nextLine().trim();
-
-                if (group.isEmpty()) {
-                    System.out.println("Ошибка: группа не может быть пустой.");
-                }
-            }
-            double grade = 0;
             boolean valid = false;
 
             while (!valid) {
-                System.out.print("Введите средний балл: ");
-                String gradeText = scanner.nextLine().trim();
-                try {
-                    grade = Double.parseDouble(gradeText);
-                    if (!Double.isFinite(grade) || grade < 0 || grade > 5) {
-                        System.out.println("Ошибка: средний балл должен быть числом от 0 до 5.");
-                    } else {
-                        valid = true;
+                System.out.println("Ввод данных студента №" + (i + 1));
+
+                System.out.print("Введите группу: ");
+                String group = scanner.nextLine().trim();
+
+                double grade;
+                while (true) {
+                    System.out.print("Введите средний балл: ");
+                    String gradeText = scanner.nextLine().trim();
+
+                    try {
+                        grade = Double.parseDouble(gradeText);
+                        break;
+                    } catch (NumberFormatException e) {
+                        System.out.println("Ошибка: введите число.");
                     }
-                } catch (NumberFormatException e) {
-                    System.out.println("Ошибка: введите число.");
+                }
+
+                System.out.print("Введите номер зачётной книжки: ");
+                String recordBook = scanner.nextLine().trim();
+
+                Student student = Student.builder()
+                        .group(group)
+                        .averageGrade(grade)
+                        .recordBook(recordBook)
+                        .build();
+
+                if (validatorService.validate(student)) {
+                    students.add(student);
+                    valid = true;
                 }
             }
-            System.out.print("Введите номер зачётной книжки: ");
-            String recordBook = scanner.nextLine().trim();
-            while (recordBook.isEmpty()) {
-                System.out.println("Ошибка: номер зачётной книжки не может быть пустым.");
-                System.out.print("Введите номер зачётной книжки: ");
-                recordBook = scanner.nextLine().trim();
-            }
-
-            Student student = Student.builder()
-                    .group(group)
-                    .averageGrade(grade)
-                    .recordBook(recordBook)
-                    .build();
-
-            students.add(student);
-
         }
+
         return students;
     }
 }
