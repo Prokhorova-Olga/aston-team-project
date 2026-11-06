@@ -2,9 +2,9 @@ package ru.aston.project.strategy;
 
 import org.junit.jupiter.api.Test;
 
-public class StrategyTest {
+public class EvenOddSortTest {
     @Test
-    void EvenOddSort(){
+    void EvenOddSort() {
 //        Student s4 = Student.builder().group("A-1").averageGrade(4.0).recordBook("1").build();
 //        Student s3 = Student.builder().group("A-1").averageGrade(3.0).recordBook("2").build();
 //        Student s2 = Student.builder().group("A-1").averageGrade(2.0).recordBook("3").build();
