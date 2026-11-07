@@ -8,8 +8,9 @@ import java.util.List;
 public class InsertionSort implements SortStrategy {
     @Override
     public void sort(List<Student> students, Comparator<Student> comparator) {
-        if (students == null || students.size() < 2) return;
-        long t1 = System.nanoTime();
+        if (students == null || students.size() < 2) {
+            return;
+        }
         for (int i = 1; i < students.size(); i++) {
             Student current = students.get(i);
             int j = i - 1;
