@@ -9,14 +9,16 @@ public class QuickSort implements SortStrategy {
 
     @Override
     public void sort(List<Student> students, Comparator<Student> comparator) {
-        long t1 = System.nanoTime();
-        if (students == null || students.size() < 2) return;
+        if (students == null || students.size() < 2) {
+            return;
+        }
         quickSort(students, 0, students.size() - 1, comparator);
-        System.out.printf("Потрачено на сортировку: %d%n", (System.nanoTime() - t1));
     }
 
     private void quickSort(List<Student> list, int left, int right, Comparator<Student> comparator) {
-        if (left >= right) return;
+        if (left >= right) {
+            return;
+        }
         Student pivot = list.get((left + right) / 2);
         int i = left;
         int j = right;
