@@ -8,7 +8,6 @@ import ru.aston.project.validator.StudentValidatorService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,10 +16,9 @@ public class DataReaderTest {
     @Test
     void generateRandom_size() {
         StudentValidatorService validatorService = new StudentValidatorService();
-        List<Student> students = new ArrayList<>();
 
         DataReader dataReader = new DataReader(validatorService);
-        students = dataReader.generateRandom(10);
+        List<Student> students = dataReader.generateRandom(10);
 
         int size1 = 10;
         int size2 = students.size();
@@ -31,10 +29,9 @@ public class DataReaderTest {
     @Test
     void generateRandom_averageGrade1to5() {
         StudentValidatorService validatorService = new StudentValidatorService();
-        List<Student> students = new ArrayList<>();
 
         DataReader dataReader = new DataReader(validatorService);
-        students = dataReader.generateRandom(10);
+        List<Student> students = dataReader.generateRandom(10);
 
         for (Student student : students) {
             assertTrue(student.getAverageGrade() >= 1.0);
@@ -45,15 +42,11 @@ public class DataReaderTest {
     @Test
     void generateRandom_illegalArgumentException() {
         StudentValidatorService validatorService = new StudentValidatorService();
-        List<Student> students = new ArrayList<>();
-
         DataReader dataReader = new DataReader(validatorService);
-        students = dataReader.generateRandom(10);
 
-        IllegalArgumentException exception = assertThrows(
+        assertThrows(
                 IllegalArgumentException.class,
                 () -> {
-                    // Вызов метода, который должен выбросить исключение
                     dataReader.generateRandom(-1);
                 }
         );
@@ -62,10 +55,9 @@ public class DataReaderTest {
     @Test
     void generateRandom_count0() {
         StudentValidatorService validatorService = new StudentValidatorService();
-        List<Student> students = new ArrayList<>();
 
         DataReader dataReader = new DataReader(validatorService);
-        students = dataReader.generateRandom(0);
+        List<Student> students = dataReader.generateRandom(0);
 
         assertTrue(students.isEmpty());
     }
