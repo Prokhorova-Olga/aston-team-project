@@ -65,4 +65,43 @@ public class StudentValidatorServiceTest {
         StudentValidatorService studentValidatorService = new StudentValidatorService();
         assertFalse(studentValidatorService.validate(student));
     }
+
+    @Test
+    void validate_shouldReturnTrueForBoundaryAverageGrades() {
+        StudentValidatorService service = new StudentValidatorService();
+
+        Student minGradeStudent = Student.builder()
+                .group("A-101")
+                .averageGrade(0.0)
+                .recordBook("111111")
+                .build();
+        Student maxGradeStudent = Student.builder()
+                .group("B-202")
+                .averageGrade(5.0)
+                .recordBook("222222")
+                .build();
+
+        assertTrue(service.validate(minGradeStudent));
+        assertTrue(service.validate(maxGradeStudent));
+    }
+
+    @Test
+    void validate_shouldReturnFalseWhenGroupContainsOnlySpaces() {
+        StudentValidatorService service = new StudentValidatorService();
+
+        Student student = Student.builder()
+                .group("   ")
+                .averageGrade(4.5)
+                .recordBook("111111")
+                .build();
+
+        assertFalse(service.validate(student));
+    }
+
+    @Test
+    void validate_shouldReturnFalseForNullStudent() {
+        StudentValidatorService service = new StudentValidatorService();
+
+        assertDoesNotThrow(() -> assertFalse(service.validate(null)));
+    }
 }
