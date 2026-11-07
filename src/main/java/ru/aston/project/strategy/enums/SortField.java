@@ -1,9 +1,9 @@
 package ru.aston.project.strategy.enums;
 
+import ru.aston.project.model.Student;
 import ru.aston.project.strategy.comparator.AvgScoreComparator;
 import ru.aston.project.strategy.comparator.GroupNumComparator;
 import ru.aston.project.strategy.comparator.StudentIdComparator;
-import ru.aston.project.model.Student;
 
 import java.util.Arrays;
 import java.util.Comparator;
