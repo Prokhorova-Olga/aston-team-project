@@ -118,5 +118,14 @@ public class DataReaderTest {
         assertTrue(students.isEmpty());
     }
 
+    @Test
+    void readFromFile_shouldReturnEmptyListForEmptyFile(@TempDir Path tempDir) throws IOException {
+        Path emptyFile = Files.createFile(tempDir.resolve("empty.txt"));
+        DataReader reader = new DataReader(new StudentValidatorService());
 
+        List<Student> students = assertDoesNotThrow(() -> reader.readFromFile(emptyFile.toString()));
+
+        assertNotNull(students);
+        assertEquals(0, students.size());
+    }
 }
