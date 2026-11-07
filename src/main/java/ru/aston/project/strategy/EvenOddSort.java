@@ -1,8 +1,10 @@
-package ru.aston.project.strategy_temp;
+package ru.aston.project.strategy;
 
 import ru.aston.project.model.Student;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class EvenOddSort implements SortStrategy {
 
