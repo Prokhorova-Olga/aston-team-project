@@ -4,6 +4,11 @@ import ru.aston.project.collection.CustomList;
 import ru.aston.project.io.DataReader;
 import ru.aston.project.io.DataWriter;
 import ru.aston.project.model.Student;
+import ru.aston.project.strategy.EvenOddSort;
+import ru.aston.project.strategy.InsertionSort;
+import ru.aston.project.strategy.QuickSort;
+import ru.aston.project.strategy.SortStrategy;
+import ru.aston.project.strategy.enums.SortField;
 import ru.aston.project.threads.MultiThreadCounter;
 import ru.aston.project.validator.StudentValidatorService;
 
@@ -79,30 +84,7 @@ public class ConsoleApplication {
                     }
                 }
 
-                case "3" -> {
-                    System.out.println("Выберите поле сортировки:");
-                    System.out.println("1. Группа");
-                    System.out.println("2. Средний балл");
-                    System.out.println("3. Номер зачётки");
-
-                    System.out.print("Ваш выбор: ");
-                    String fieldChoice = scanner.nextLine().trim();
-
-                    System.out.println("Выберите алгоритм:");
-                    System.out.println("1. Алгоритм 1");
-                    System.out.println("2. Алгоритм 2");
-
-                    System.out.print("Ваш выбор: ");
-                    String algorithmChoice = scanner.nextLine().trim();
-
-                    if (!fieldChoice.matches("[1-3]") || !algorithmChoice.matches("[1-2]")) {
-                        System.out.println("Некорректный выбор.");
-                    }
-                    else {
-                        // сортировки Насти
-                        System.out.println("Тут будет сортировка: поле " + fieldChoice + ", алгоритм " + algorithmChoice);
-                    }
-                }
+                case "3" -> sortStudents(scanner, students);
 
                 case "4" -> extrasMenu(scanner, students, counter);
 
@@ -121,6 +103,73 @@ public class ConsoleApplication {
     }
 
 
+    private void sortStudents(Scanner scanner, CustomList students) {
+        if (students.isEmpty()) {
+            System.out.println("Список студентов пуст.");
+            return;
+        }
+
+        SortField field = askSortField(scanner);
+        if (field == null) {
+            return;
+        }
+
+        System.out.println("Выберите алгоритм:");
+        System.out.println("1. Сортировка вставками");
+        System.out.println("2. Быстрая сортировка");
+
+        System.out.print("Ваш выбор: ");
+        String algorithmChoice = scanner.nextLine().trim();
+
+        SortStrategy strategy;
+        if (algorithmChoice.equals("1")) {
+            strategy = new InsertionSort();
+        } else if (algorithmChoice.equals("2")) {
+            strategy = new QuickSort();
+        } else {
+            System.out.println("Некорректный выбор.");
+            return;
+        }
+
+        strategy.sort(students, field.getComparator());
+        System.out.println("Список отсортирован.");
+    }
+
+
+    private void customSortStudents(Scanner scanner, CustomList students) {
+        if (students.isEmpty()) {
+            System.out.println("Список студентов пуст.");
+            return;
+        }
+
+        SortField field = askSortField(scanner);
+        if (field == null) {
+            return;
+        }
+
+        new EvenOddSort().sort(students, field.getComparator());
+        System.out.println("Кастомная сортировка выполнена.");
+    }
+
+
+    private SortField askSortField(Scanner scanner) {
+        System.out.println("Выберите поле сортировки:");
+        System.out.println("1. Средний балл");
+        System.out.println("2. Группа");
+        System.out.println("3. Номер зачётки");
+
+        System.out.print("Ваш выбор: ");
+        String fieldChoice = scanner.nextLine().trim();
+
+        if (!fieldChoice.matches("[1-3]")) {
+            System.out.println("Некорректный выбор.");
+            return null;
+        }
+
+        return SortField.fromCode(Integer.parseInt(fieldChoice));
+    }
+
+
     private void extrasMenu(Scanner scanner, CustomList students, MultiThreadCounter counter) {
         while (true) {
             printExtrasMenu();
@@ -129,8 +178,7 @@ public class ConsoleApplication {
             String choice = scanner.nextLine().trim();
 
             switch (choice) {
-                case "1" ->
-                        System.out.println("В разработке.");
+                case "1" -> customSortStudents(scanner, students);
 
                 case "2" -> {
                     if (students.isEmpty()) {
