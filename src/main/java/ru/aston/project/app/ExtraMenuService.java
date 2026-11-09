@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 
 public class ExtraMenuService {
-    // Сюда мы передаем scanner, students и counter
+
     public void showExtrasMenu(Scanner scanner, CustomList students, MultiThreadCounter counter) {
         while (true) {
             printExtrasMenu();

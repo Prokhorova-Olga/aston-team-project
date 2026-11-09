@@ -17,7 +17,6 @@ public class ConsoleApplication {
     public void start() {
         Scanner scanner = new Scanner(System.in);
 
-        // Инициализация зависимостей
         StudentValidatorService validator = new StudentValidatorService();
         FileDataReader fileReader = new FileDataReader();
         StudentParser parser = new StudentParser(validator);
