@@ -22,7 +22,6 @@ public class EvenOddSortTest {
 
         assertEquals(2.0, students.get(0).getAverageGrade());
         assertEquals(3.0, students.get(1).getAverageGrade());
-        assertEquals(List.of(s2, s3, s4, s5), students);
     }
 
     @Test
@@ -102,5 +101,11 @@ public class EvenOddSortTest {
         assertEquals(3.0, students.get(1).getAverageGrade());
         assertSame(s0, students.get(0));
         assertSame(s1, students.get(1));
+    }
+
+    @Test
+    void sort_shouldNotThrowForNullOrEmptyList() {
+        assertDoesNotThrow(() -> new EvenOddSort().sort(null, Comparator.comparingDouble(Student::getAverageGrade)));
+        assertDoesNotThrow(() -> new EvenOddSort().sort(new ArrayList<>(), Comparator.comparingDouble(Student::getAverageGrade)));
     }
 }

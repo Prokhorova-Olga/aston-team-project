@@ -10,10 +10,12 @@ public class EvenOddSort implements SortStrategy {
 
     @Override
     public void sort(List<Student> studentList, Comparator<Student> comparator) {
+        if (studentList == null || studentList.isEmpty()) {
+            return;
+        }
         List<Student> evenStudents = getEvenStudents(studentList);
         sortEvenStudents(evenStudents, comparator);
         mergeStudentBack(studentList, evenStudents);
-
     }
 
     private List<Student> getEvenStudents(List<Student> studentList) {

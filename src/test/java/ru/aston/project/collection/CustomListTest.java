@@ -28,7 +28,8 @@ public class CustomListTest {
         }
 
         assertEquals(20, list.size());
-        assertEquals(added[15], list.get(15));
+        assertEquals("A-15", list.get(15).getGroup());
+        assertEquals("A-19", list.get(19).getGroup());
     }
 
     @Test
@@ -40,7 +41,7 @@ public class CustomListTest {
     @Test
     void add_shouldThrowIllegalArgumentException_whenStudentIsNull() {
 
-        assertThrows(IllegalArgumentException.class, () -> list.add((Student) null));
+        assertThrows(IllegalArgumentException.class, () -> list.add(null));
     }
 
     @Test

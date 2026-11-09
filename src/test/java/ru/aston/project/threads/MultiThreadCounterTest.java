@@ -52,6 +52,20 @@ public class MultiThreadCounterTest {
     }
 
     @Test
+    void countOccurrences_shouldReturnZero_whenTargetNotFound() {
+        Student target = Student.builder()
+                .group("A-1").averageGrade(4.5).recordBook("123").build();
+        Student other = Student.builder()
+                .group("B-2").averageGrade(4.0).recordBook("456").build();
+
+        List<Student> students = List.of(other, other);
+
+        int result = counter.countOccurrences(students, target);
+
+        assertEquals(0, result);
+    }
+
+    @Test
     void countOccurrences_shouldReturnZero_whenListIsNull() {
         Student target = Student.builder()
                 .group("A-1")
@@ -62,5 +76,12 @@ public class MultiThreadCounterTest {
         int result = counter.countOccurrences(null, target);
 
         assertEquals(0, result);
+    }
+
+    @Test
+    void countOccurrences_shouldReturnTwo_whenListHasThreeElementsAndTwoMatches() {
+        Student target = Student.builder().group("A-1").averageGrade(3.5).recordBook("123").build();
+        List<Student> students = List.of(target, target, Student.builder().group("B-1").build());
+        assertEquals(2, counter.countOccurrences(students, target));
     }
 }

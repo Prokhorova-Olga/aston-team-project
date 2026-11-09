@@ -9,8 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class StreamDataReaderTest {
 
@@ -48,5 +47,25 @@ public class StreamDataReaderTest {
                 () -> reader.readFromFileWithStreams(tempFile.toString()));
 
         assertEquals(0, students.size());
+    }
+
+    @Test
+    void readFromFile_shouldSkipLine_whenNotThreeElements(@TempDir Path tempDir) throws IOException {
+        Path tempFile = tempDir.resolve("broken-line.txt");
+        Files.writeString(tempFile, "A-1, 4.5");
+
+        List<Student> students = reader.readFromFileWithStreams(tempFile.toString());
+
+        assertEquals(0, students.size());
+    }
+
+    @Test
+    void readFromFile_shouldReturnEmptyList_whenFileIsEmpty(@TempDir Path tempDir) throws IOException {
+        Path tempFile = tempDir.resolve("empty.txt");
+        Files.createFile(tempFile);
+
+        List<Student> students = reader.readFromFileWithStreams(tempFile.toString());
+
+        assertTrue(students.isEmpty());
     }
 }

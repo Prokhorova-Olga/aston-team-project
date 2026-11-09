@@ -16,6 +16,10 @@ public class StudentParser {
 
     public List<Student> parseLines(List<String> lines) {
         List<Student> students = new ArrayList<>();
+
+        if (lines == null) {
+            return students;
+        }
         int lineNumber = 0;
 
         for (String line : lines) {
